@@ -1,6 +1,6 @@
 FROM golang:latest as builder
 
-ARG version=0.11.0
+ARG version=0.11.3
 
 RUN git clone https://github.com/mholt/caddy -b "v${version}" $GOPATH/src/github.com/mholt/caddy; \
 	go get github.com/caddyserver/dnsproviders/digitalocean; \
