@@ -5,9 +5,10 @@ ARG version=0.11.4
 RUN git clone https://github.com/mholt/caddy -b "v${version}" $GOPATH/src/github.com/mholt/caddy; \
 	go get github.com/caddyserver/dnsproviders/digitalocean; \
 	go get github.com/caddyserver/builds; \
+	go get github.com/lucaslorentz/caddy-docker-proxy/plugin; \
 	cd $GOPATH/src/github.com/mholt/caddy/caddy; \
 	sed -i 's|var EnableTelemetry = true|var EnableTelemetry = false|g' caddymain/run.go; \
-	sed -i 's|\(\t// This is where other plugins.*\)|\1\n\t_ "github.com/caddyserver/dnsproviders/digitalocean"|g' caddymain/run.go; \
+	sed -i 's|\(\t// This is where other plugins.*\)|\1\n\t_ "github.com/caddyserver/dnsproviders/digitalocean"\n\t_ "github.com/lucaslorentz/caddy-docker-proxy/plugin"|g' caddymain/run.go; \
 	git checkout -b "moccu"; \
 	git -c user.name="moccu" -c user.email="admin@moccu.com"  commit -am "Moccu custom build"; \
 	go run build.go; \
