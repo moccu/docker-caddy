@@ -6,6 +6,7 @@ Docker image with a customized build of [Caddy](https://github.com/mholt/caddy)
 * Caddy built from source
 * DigitalOcean DNS provider
 * Telemetry disabled
+* [Docker proxy Caddyfile loader](https://github.com/lucaslorentz/caddy-docker-proxy/) plugin enabled, use <tag>-dockerproxy tags
 * Container runs as unprivileged user ([su-exec](https://github.com/ncopa/su-exec))
 
 
