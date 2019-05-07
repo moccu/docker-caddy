@@ -13,7 +13,7 @@ build_push:
 
 build:
 	docker build -t moccu/caddy:${TAG} -f Dockerfile .
-	docker build -t moccu/caddy:${TAG}-dockerproxy -f Dockerfile.dockerproxy .
+	docker build --build-arg CADDYGO=caddy-dockerproxy.go -t moccu/caddy:${TAG}-dockerproxy -f Dockerfile .
 
 push:
 	docker push moccu/caddy:${TAG}
