@@ -1,20 +1,15 @@
 .PHONY: latest current_tag build_push build push
 
 
-latest:
-	@TAG=latest make build_push
+preparebuildx:
+	DOCKER_CLI_EXPERIMENTAL=enabled docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx create --name multiarchbuilder
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx use multiarchbuilder
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx inspect --bootstrap multiarchbuilder
 
-current_tag:
-	@TAG=`git describe --tags --abbrev=0` make build_push
-
-build_push:
+image:
 	@echo About to build and push "${TAG}"; read
-	make build push
-
-build:
-	docker build -t moccu/caddy:${TAG} -f Dockerfile .
-	docker build --build-arg CADDYGO=caddy-dockerproxy.go -t moccu/caddy:${TAG}-dockerproxy -f Dockerfile .
-
-push:
-	docker push moccu/caddy:${TAG}
-	docker push moccu/caddy:${TAG}-dockerproxy
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform linux/arm/v7,linux/amd64 -t moccu/caddy:latest -t moccu/caddy:${TAG} --push .
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx imagetools inspect moccu/caddy:latest
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --platform linux/arm/v7,linux/amd64 -t moccu/caddy:latest-dockerproxy -t moccu/caddy:${TAG}-dockerproxy --build-arg CADDYGO=caddy-dockerproxy.go .
+	DOCKER_CLI_EXPERIMENTAL=enabled docker buildx imagetools inspect moccu/caddy:latest-dockerproxy
